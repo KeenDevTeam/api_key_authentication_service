@@ -17,10 +17,6 @@ const ACCEPTED_EXTENSIONS = '{.ts,.js}';
 
 export const SCHEMA_NAME = 'api_key_auth';
 
-/* Node environment */
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isProduction = process.env.NODE_ENV === 'production';
-
 /* Default TypeOrm connection options */
 const defaultTypeOrmConnectionOptions: ConnectionOptions = {
   /* General */
@@ -44,9 +40,8 @@ const defaultTypeOrmConnectionOptions: ConnectionOptions = {
   cache: false,
 
   /* logging */
-  logging: ['error', 'migration', 'schema', 'warn', 'log', 'info'], // logs everything except query
+  logging: true, // logs everything
   logger: 'advanced-console',
-  maxQueryExecutionTime: 500, // 500 milliseconds
 
   /* CLI */
   cli: {
@@ -60,29 +55,6 @@ let connectionOptions: ConnectionOptions = {
   ...defaultTypeOrmConnectionOptions,
 };
 
-// improve logging in production
-if (isProduction === true) {
-  connectionOptions = {
-    ...connectionOptions,
-    logging: ['error', 'warn', 'migration'],
-  };
-}
-
-// enable caching (if enabled)
-if (env('KD_API_KEY_AUTH_DB_CACHE').default('false').asBool() === true) {
-  connectionOptions = {
-    ...connectionOptions,
-
-    /* Caching */
-    cache: {
-      type: 'redis',
-      options: {
-        url: env('KD_API_KEY_AUTH_DB_CACHE_REDIS_URL').required().asUrlString(),
-      },
-    },
-  };
-}
-
 /* Export configuration */
-export const ormconfig = { ...defaultTypeOrmConnectionOptions };
+export const ormconfig = { ...connectionOptions };
 export default ormconfig;
