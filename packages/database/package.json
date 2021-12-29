@@ -1,6 +1,9 @@
 {
   "name": "@keendev/api-key-auth-database",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build:clean": "rimraf dist",
     "build:compile": "tsc -b .",
